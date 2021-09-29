@@ -1,18 +1,27 @@
 #include<stdio.h>
 
 
+typedef int MyCompares(const int *first , const int *last);
 
-void quicksort(int *arr, int first, int last, void *compare(const void *, const void *) );
-int compare(const void * a, const void * b);
+void quicksort(int *arr, int first, int last, MyCompares );
+int findpivot( int arr[], int low, int high, MyCompares comparefv );
+int a_isBigger(const int *a, const int *b);
 void swap(int *arr, int a, int b);
 
 
+int n;
 int main()
 {
 
-    int arr[] = {10, 5, 15, 12, 90, 80};
-    int n = sizeof(arr)/sizeof(arr[0]), i;
 
+    int arr[] = {1,2,4,8,6,1,5,3,5,4,9,5,7,6,5,2,3,4,5,8,4};
+
+    n = sizeof(arr)/sizeof(int);
+    int i;
+    quicksort(arr, 0, n-1, a_isBigger);
+
+    for( i=0; i< n; i++)
+        printf("%d\n", arr[i]);
 
 
     return 0;
@@ -20,45 +29,53 @@ int main()
 
 
 
-void quicksort(int *arr, int first, int last, compare )
+void quicksort(int *arr, int first, int last,  MyCompares comparefv )
 {
+    if(first == last) return;
+    int pivot;
 
-    if( compare( first,last) )
+    for(int i=0; i< n; i++)
+        printf("%d, ", arr[i]);
+    printf("\n");
+
+    if(first < last )
     {
-        int pivot = partition(number)
-
+       pivot = findpivot(arr, first, last, comparefv);
+       quicksort(arr, first, pivot-1, comparefv);
+       quicksort(arr, pivot+1, last, comparefv);
     }
 
 }
 
-int compare(const void * a, const void * b)
+int a_isBigger(const int * a, const int * b)
 {
-    return ( *(int*)a - *(int*)b );
+    if(*(int *)a  <  *(int *)b) return 0;
+    else return 1;
 }
 
-void separation(int *arr, int first, int last )
-{
-    int pivot = arr[first];
-    i= first, j = last+1;
-    while( i < j)
-    {
-        do
-        {
-            i++;
-        }while(a[i] < pivot && i<last)
-        do{
-            j--;
-        }while(a[j]>pivot && j>elso)
-        if(i < j) swap(a, i, j);
-    }
-    swap(a, E,j);
-    return j;
+int findpivot( int arr[], int low, int high, MyCompares comparefv ) {
+
+   int i;
+   int pivot = arr[high];
+   int pivot_index = low;
+
+   for (i=low; i < high; ++i ) {
+      if (comparefv(&arr[i], &pivot)) {
+         swap( arr, i, pivot_index );
+         ++pivot_index;
+      }
+   }
+   swap( arr, high, pivot_index );
+   return pivot_index;
 }
 
 void swap(int *arr, int a, int b)
 {
-    arr[a] ^= arr[b];
-    arr[b] ^= arr[a];
-    arr[a] ^= arr[b];
-
+   // printf("%d - %d\t", arr[a], arr[b]);
+    if(arr[a] != arr[b]){
+    arr[a] = arr[a] ^ arr[b];
+    arr[b] = arr[a] ^ arr[b];
+    arr[a] = arr[a] ^ arr[b];
+    }
+   // printf("%d - %d\n", arr[a], arr[b]);
 }
